@@ -3,6 +3,8 @@ import math as m
 import matplotlib.pyplot as plt
 import time
 
+#
+
 def kroneckerDelta(i,j):
     if i == j:
         return 1
