@@ -304,18 +304,20 @@ def PsuedoSpectralSolutionToWaveEquation(initPosition, initMomentum, numberofIte
 def PsuedoSpectralSolutionToReflectingWaveEquation(initPosition, initMomentum, numberofIterations):
     
     
-    L = len(initPosition) 
-    Dx = ConstructPseudoSpectralDiffMatrix(L)
-    u = []
-    p=[]
+    L   = len(initPosition) 
+    Dx  = ConstructPseudoSpectralDiffMatrix(L)
+    u   = []
+    pi  = []
+    phi = []
     
     u.append(initPosition)
     p.append(initMomentum)
         
     
     t=0.001
-    tempu = 0
-    tempp = 0
+    temp_u = 0
+    temp_pi = 0
+    temp_phi= 0
     k=0
     while k < numberofIterations:
         
@@ -327,6 +329,12 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(initPosition, initMomentum, n
         # Reflecting boundary conditions ux0 = 0 => uxx0 = 0
         # Strong boundary imposition: force u0 to be the boundary value you want
         # In this case, we're enforcing boundary conditions on the left boundary, the left most element u0.
+        
+        
+        
+        
+        
+        
         
     
         tempp = t*np.dot(Dx,p[k]) + p[k]
@@ -391,6 +399,7 @@ def Wavesoln():
        
     
     C.pop(0)
+    
     C.pop()
     
     for i in range(0,30):
