@@ -5,7 +5,7 @@
  */
 
 /* 
- * File:   main.c
+ * File:   RungeKutta.c
  * Author: Dominic Gastaldo
  *
  * Created on April 7, 2017, 6:18 PM
