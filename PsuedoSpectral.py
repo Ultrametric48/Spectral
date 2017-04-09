@@ -299,18 +299,21 @@ def PsuedoSpectralSolutionToWaveEquation(initPosition, initMomentum, numberofIte
         
     
     return u
-    
+  
+#*******************************************************************************  
+        
 #Input numpy array 
 def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_derivative_of_init_position, Supply_Pi_init_velocity, number_of_Iterations):
     
     """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
-    d/dx u(0,x) = Ph(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
+    d/dx u(0,x) = Phi(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
+    print("HERE")
     
     L   = len(Supply_init_Position) 
     Dx  = ConstructPseudoSpectralDiffMatrix(L)
-    u   = []
-    pi  = []
-    phi = []
+    u   = [Supply_init_Position]
+    pi  = [Supply_derivative_of_init_position]
+    phi = [Supply_Pi_init_velocity]
     
     u.append(Supply_init_Position)
     phi.append(Supply_derivative_of_init_position)
@@ -325,6 +328,7 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         
        
         temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
+        print("---->"+temp_phi)
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
         temp_phi = np.array(temp_phi.tolist()[0])
         
@@ -341,33 +345,6 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         temp_u = np.array(temp_u.tolist()[0])
         
         
-        
-        #tempu = t*(p[k] - np.dot(Dx,u[k])) + u[k]
-        # Reflecting BC uxx0 = 0
-        #tempu = t* np.dot(Dx,u[k])
-        #Tempu will be a matrix...[[entries]]. Must convert to array...[entries]
-        #tempu = np.array(tempu.tolist()[0])
-        # Reflecting boundary conditions ux0 = 0 => uxx0 = 0
-        # Strong boundary imposition: force u0 to be the boundary value you want
-        # In this case, we're enforcing boundary conditions on the left boundary, the left most element u0.
-        
-        
-        
-        
-        
-        
-        
-    
-        #tempp = t*np.dot(Dx,p[k]) + p[k]
-        #Tempp will be a matrix...[[entries]]. Must convert to array...[entries]
-        #tempp = np.array(tempp.tolist()[0])
-        # Reflecting boundary conditions p0 -> -p0
-        # Strong boundary imposition: force p0 to be the boundary value you want
-        
-    
-    
-        #u.append(tempu)
-        #p.append(tempp)
     
         phi.append(temp_phi)
         pi.append(temp_pi)

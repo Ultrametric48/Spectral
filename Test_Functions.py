@@ -63,6 +63,7 @@ def Wavesoln():
 
 def Reflecting_Wave_Test():
      
+    print("Hi!")
      
     C = GenerateChebyshevCollocationPoints(20)
     C.sort()
@@ -85,9 +86,9 @@ def Reflecting_Wave_Test():
         pi.append(5)
     pi = np.array(pi)
         
-        
+    SSP = PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
     
-    return PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
+    return SSP
  
         
         
