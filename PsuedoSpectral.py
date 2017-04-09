@@ -301,8 +301,10 @@ def PsuedoSpectralSolutionToWaveEquation(initPosition, initMomentum, numberofIte
     return u
     
 #Input numpy array 
-def PsuedoSpectralSolutionToReflectingWaveEquation(initPosition, initMomentum, numberofIterations):
+def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_derivative_of_init_position, Supply_Pi_init_velocity, number_of_Iterations):
     
+    """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
+    d/dx u(0,x) = Ph(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
     
     L   = len(initPosition) 
     Dx  = ConstructPseudoSpectralDiffMatrix(L)
@@ -310,22 +312,41 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(initPosition, initMomentum, n
     pi  = []
     phi = []
     
-    u.append(initPosition)
-    p.append(initMomentum)
-        
+    u.append(Supply_init_Position)
+    phi.append(Supply_derivative_of_init_position)
+    pi.append(Supply_Pi_init_velocity)
     
-    t=0.001
-    temp_u = 0
+    t       = 0.001
+    temp_u  = 0
     temp_pi = 0
     temp_phi= 0
     k=0
-    while k < numberofIterations:
+    while k < number_of_Iterations:
         
-        tempu = t*(p[k] - np.dot(Dx,u[k])) + u[k]
+        
+        temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        phi.append(np.array(temp_phi.tolist()[0]))
+        
+        
+        
+        temp_pi = t*np.dot(Dx,phi[k]) + pi[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        pi.append(np.array(temp_pi.tolist()[0]))
+        
+        
+        
+        temp_u = t*pi[k] + u[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        u.append(np.array(temp_u.tolist()[0]))
+        
+        
+        
+        #tempu = t*(p[k] - np.dot(Dx,u[k])) + u[k]
         # Reflecting BC uxx0 = 0
-        tempu = t* np.dot(Dx,u[k])
+        #tempu = t* np.dot(Dx,u[k])
         #Tempu will be a matrix...[[entries]]. Must convert to array...[entries]
-        tempu = np.array(tempu.tolist()[0])
+        #tempu = np.array(tempu.tolist()[0])
         # Reflecting boundary conditions ux0 = 0 => uxx0 = 0
         # Strong boundary imposition: force u0 to be the boundary value you want
         # In this case, we're enforcing boundary conditions on the left boundary, the left most element u0.
@@ -337,16 +358,16 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(initPosition, initMomentum, n
         
         
     
-        tempp = t*np.dot(Dx,p[k]) + p[k]
+        #tempp = t*np.dot(Dx,p[k]) + p[k]
         #Tempp will be a matrix...[[entries]]. Must convert to array...[entries]
-        tempp = np.array(tempp.tolist()[0])
+        #tempp = np.array(tempp.tolist()[0])
         # Reflecting boundary conditions p0 -> -p0
         # Strong boundary imposition: force p0 to be the boundary value you want
         
     
     
-        u.append(tempu)
-        p.append(tempp)
+        #u.append(tempu)
+        #p.append(tempp)
     
     
         k = k + 1
