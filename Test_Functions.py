@@ -1,6 +1,6 @@
 
 from PsuedoSpectral import *
-
+import math as m
 
 def FullsolnHeatEquation():
     
@@ -25,7 +25,9 @@ def FullsolnHeatEquation():
     for k in SSP:
         plt.plot(C,k)
     
-    
+
+#*******************************************************************************    
+            
 def Wavesoln():
 
 
@@ -53,4 +55,48 @@ def Wavesoln():
     for i in range(0,30):
         plt.plot(C,SSP[i])
     
+        
+               
+#*******************************************************************************
+        
+#Test Area
+
+def Reflecting_Wave_Test():
+     
+     
+    C = GenerateChebyshevCollocationPoints(20)
+    C.sort()
+     
+ 
+    u = []
+    for i in C:
+        u.append(m.exp(-20.0*i**2))
+    u = np.array(u)
+        
+        
+    phi = []
+    for i in C:
+        phi.append(-40.0*m.exp(-20.0*i**2))
+    phi = np.array(phi)
+
+        
+    pi = []
+    for i in range(len(C)):
+        pi.append(5)
+    pi = np.array(pi)
+        
+        
+    
+    return PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
+ 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
