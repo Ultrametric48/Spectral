@@ -306,7 +306,7 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
     d/dx u(0,x) = Ph(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
     
-    L   = len(initPosition) 
+    L   = len(Supply_init_Position) 
     Dx  = ConstructPseudoSpectralDiffMatrix(L)
     u   = []
     pi  = []
@@ -323,22 +323,22 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     k=0
     while k < number_of_Iterations:
         
-        
+       
         temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
-        phi.append(np.array(temp_phi.tolist()[0]))
+        temp_phi = np.array(temp_phi.tolist()[0])
         
         
         
         temp_pi = t*np.dot(Dx,phi[k]) + pi[k]
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
-        pi.append(np.array(temp_pi.tolist()[0]))
+        temp_pi = np.array(temp_pi.tolist()[0])
         
         
         
         temp_u = t*pi[k] + u[k]
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
-        u.append(np.array(temp_u.tolist()[0]))
+        temp_u = np.array(temp_u.tolist()[0])
         
         
         
@@ -369,6 +369,9 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         #u.append(tempu)
         #p.append(tempp)
     
+        phi.append(temp_phi)
+        pi.append(temp_pi)
+        u.append(temp_u)
     
         k = k + 1
         
