@@ -1,5 +1,5 @@
 
-from PsuedoSpectral import *
+from Psuedo_spectral import *
 import math as m
 
 def FullsolnHeatEquation():
@@ -91,7 +91,8 @@ def Reflecting_Wave_Test():
     return SSP
  
         
-        
+def temp():
+    return testtwo()   
         
         
         

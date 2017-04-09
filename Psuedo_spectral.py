@@ -3,8 +3,6 @@ import math as m
 import matplotlib.pyplot as plt
 import time
 
-#
-
 def kroneckerDelta(i,j):
     if i == j:
         return 1
@@ -213,7 +211,7 @@ def PsuedoSpectralSolutiontoHeatEquation(initCoefficients, numberofIterations):
     u = [np.array(u)]
     
     
-    k=1
+    k=1.0
     t=0.001
     temp=0
     c=0
@@ -268,8 +266,6 @@ def PsuedoSpectralSolutionToWaveEquation(initPosition, initMomentum, numberofIte
     u.append(initPosition)
     p.append(initMomentum)
     
-    
-        
         
     
     t=0.001
@@ -303,5 +299,75 @@ def PsuedoSpectralSolutionToWaveEquation(initPosition, initMomentum, numberofIte
         
     
     return u
+  
+#*******************************************************************************  
+        
+#Input numpy array 
+def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_derivative_of_init_position, Supply_Pi_init_velocity, number_of_Iterations):
+    
+    """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
+    d/dx u(0,x) = Phi(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
+    print("HERE")
+    
+    L   = len(Supply_init_Position) 
+    Dx  = ConstructPseudoSpectralDiffMatrix(L)
+    u   = [Supply_init_Position]
+    pi  = [Supply_derivative_of_init_position]
+    phi = [Supply_Pi_init_velocity]
+    
+    u.append(Supply_init_Position)
+    phi.append(Supply_derivative_of_init_position)
+    pi.append(Supply_Pi_init_velocity)
+    
+    t       = 0.001
+    temp_u  = 0
+    temp_pi = 0
+    temp_phi= 0
+    k=0
+    while k < number_of_Iterations:
+        
+       
+        temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
+        print("---->"+temp_phi)
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_phi = np.array(temp_phi.tolist()[0])
+        
+        
+        
+        temp_pi = t*np.dot(Dx,phi[k]) + pi[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_pi = np.array(temp_pi.tolist()[0])
+        
+        
+        
+        temp_u = t*pi[k] + u[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_u = np.array(temp_u.tolist()[0])
+        
+        
+    
+        phi.append(temp_phi)
+        pi.append(temp_pi)
+        u.append(temp_u)
+    
+        k = k + 1
+        
+    
+    return u
+    
+
+    
+def testtwo():
+    return ":)"
+        
+        
     
     
+        
+        
+        
+    
+    
+    
+    
+        
