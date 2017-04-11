@@ -86,9 +86,9 @@ def Reflecting_Wave_Test():
         pi.append(5)
     pi = np.array(pi)
         
-    SSP = PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
     
-    return SSP
+    
+    return PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
  
         
   

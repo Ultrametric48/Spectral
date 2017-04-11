@@ -307,7 +307,6 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     
     """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
     d/dx u(0,x) = Phi(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
-    print("HERE")
     
     L   = len(Supply_init_Position) 
     Dx  = ConstructPseudoSpectralDiffMatrix(L)
@@ -328,7 +327,6 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         
        
         temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
-        print("---->"+temp_phi)
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
         temp_phi = np.array(temp_phi.tolist()[0])
         
@@ -341,8 +339,8 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         
         
         temp_u = t*pi[k] + u[k]
-        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
-        temp_u = np.array(temp_u.tolist()[0])
+        #Temp will NOT be a matrix...[[entries]]. Must NOT convert to array...[entries]
+        temp_u = np.array(temp_u)
         
         
     
@@ -360,7 +358,33 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         
     
     
+def Reflecting_Wave_Test():
+     
+     
+    C = GenerateChebyshevCollocationPoints(20)
+    C.sort()
+     
+ 
+    u = []
+    for i in C:
+        u.append(m.exp(-20.0*i**2))
+    u = np.array(u)
         
+        
+    phi = []
+    for i in C:
+        phi.append(-40.0*m.exp(-20.0*i**2))
+    phi = np.array(phi)
+
+        
+    pi = []
+    for i in range(len(C)):
+        pi.append(5)
+    pi = np.array(pi)
+        
+    
+    
+    return PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
         
         
     
