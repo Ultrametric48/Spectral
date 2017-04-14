@@ -63,7 +63,6 @@ def Wavesoln():
 
 def Reflecting_Wave_Test():
      
-    print("Hi!")
      
     C = GenerateChebyshevCollocationPoints(20)
     C.sort()
