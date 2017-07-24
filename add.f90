@@ -1,9 +1,15 @@
 
 
-REAL*8 FUNCTION ADD (A, B, C, D) 
-REAL*8 B,D
-INTEGER*4 A,C
-DIMENSION B(4), D(4)
-ADD = B(A) + D(C)
-RETURN
-END
+program ADD
+
+
+
+end program
+
+
+real*8 function add(a,b,c,d)
+integer*4 a,b,c,d
+add = a+b+c+d
+return
+end function
+
