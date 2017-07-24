@@ -212,6 +212,7 @@ def PsuedoSpectralSolutiontoHeatEquation(initCoefficients, numberofIterations):
     
     
     k=1.0
+    #t=1
     t=0.001
     temp=0
     c=0
@@ -355,10 +356,33 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     
     return u
     
+#*******************************************************************************
+    
+def FullsolnHeatEquation():
+    
+    
+    C = GenerateChebyshevCollocationPoints(20)
+    C.sort()
 
     
-def testtwo():
-    return ":)"
+    A = []
+
+    for i in C:
+    
+        A.append(m.exp(-20.0*i**2))
+    
+    A = np.array(A)
+    SSP = PsuedoSpectralSolutiontoHeatEquation(A, 100)
+
+    
+    C.pop(0)
+    C.pop()
+    
+    for k in SSP:
+        plt.plot(C,k)
+    
+
+#*******************************************************************************   
         
         
     

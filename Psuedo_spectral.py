@@ -1,4 +1,5 @@
 import numpy as np
+import scipy as sci
 import math as m
 import matplotlib.pyplot as plt
 import time
@@ -308,6 +309,8 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
     d/dx u(0,x) = Phi(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
     
+    #see Teukolsky's paper https://arxiv.org/abs/1005.2922v1
+    
     L   = len(Supply_init_Position) 
     Dx  = ConstructPseudoSpectralDiffMatrix(L)
     u   = [Supply_init_Position]
@@ -326,19 +329,17 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
     while k < number_of_Iterations:
         
        
-        temp_phi = t*np.dot(Dx,pi[k]) + phi[k]
+        temp_phi = -t*np.dot(Dx,pi[k]) + phi[k]
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
         temp_phi = np.array(temp_phi.tolist()[0])
         
         
-        
-        temp_pi = t*np.dot(Dx,phi[k]) + pi[k]
+        temp_pi = -t*np.dot(Dx,phi[k]) + pi[k]
         #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
         temp_pi = np.array(temp_pi.tolist()[0])
         
         
-        
-        temp_u = t*pi[k] + u[k]
+        temp_u = -t*pi[k] + u[k]
         #Temp will NOT be a matrix...[[entries]]. Must NOT convert to array...[entries]
         temp_u = np.array(temp_u)
         
@@ -352,37 +353,154 @@ def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_
         
     
     return u
+    #return pi
+    #return phi
     
 
+#*******************************************************************************
+
+def PsuedoSpectralSolutionToReflectingWaveEquation(Supply_init_Position, Supply_derivative_of_init_position, Supply_Pi_init_velocity, number_of_Iterations):
     
+    """Begin solution with initial data from u(0,x), phi(0,x), Pi(0,x). u(0,x) should be chosen as a continuious function so that Phi is determined analytically by
+    d/dx u(0,x) = Phi(0,x), the sample the two functions at the Chebyshev points for an initial data array. Pi can be chosen freely. ***numpy arrays should be input***"""
+    
+    #see Teukolsky's paper https://arxiv.org/abs/1005.2922v1
+    
+    L   = len(Supply_init_Position) 
+    Dx  = ConstructPseudoSpectralDiffMatrix(L)
+    u   = [Supply_init_Position]
+    pi  = [Supply_derivative_of_init_position]
+    phi = [Supply_Pi_init_velocity]
+    
+    u.append(Supply_init_Position)
+    phi.append(Supply_derivative_of_init_position)
+    pi.append(Supply_Pi_init_velocity)
+    
+    t       = 0.001
+    temp_u  = 0
+    temp_pi = 0
+    temp_phi= 0
+    k=0
+    while k < number_of_Iterations:
+        
+       
+        temp_phi = -t*np.dot(Dx,pi[k]) + phi[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_phi = np.array(temp_phi.tolist()[0])
+        
+        
+        
+        temp_pi = -t*np.dot(Dx,phi[k]) + pi[k]
+        #Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_pi = np.array(temp_pi.tolist()[0])
+        
+        
+        
+        temp_u = -t*pi[k] + u[k]
+        #Temp will NOT be a matrix...[[entries]]. Must NOT convert to array...[entries]
+        temp_u = np.array(temp_u)
+        
         
     
+        phi.append(temp_phi)
+        pi.append(temp_pi)
+        u.append(temp_u)
     
+        k = k + 1
+        
+    
+    return u
+    #return pi
+    #return phi
+    
+
+
+
+#*******************************************************************************
+
+
+def ScalarWaveSolution(initial_scalar_field, initial_conjugate_momentum, num_iterations):
+
+    #Needs testing 
+    
+    L   = len(initial_scalar_field) 
+    phi = [initial_scalar_field]
+    pi  = [initial_conjugate_momentum]
+    
+    D =  ConstructPseudoSpectralDiffMatrix(L)
+    
+    temp_phi = 0
+    temp_pi = 0
+    x = 0
+    A = 0
+    delta = 0
+    t = 0.001
+    
+    for n in range(num_iterations):
+        
+        
+        temp_phi = t*np.dot(D,A[n]*m.exp(-delta)*pi[n]) + phi[n]
+        # Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_phi = np.array(temp_phi.tolist()[0])
+        
+        
+        temp_pi = t/((m.tan(x))**2)*np.dot(D,(m.tan(x)**2)*A[n]*m.exp(-delta)*phi) + phi[n]
+        # Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_pi = np.array(temp_pi.tolist()[0])
+        
+        
+        temp_A = -2.0*t*m.sin(x)*m.cos(x)*(A**2)*m.exp(-delta)*phi[n]*pi[n] + A[n]
+        # Temp will be a matrix...[[entries]]. Must convert to array...[entries]
+        temp_A = np.array(temp_A.tolist()[0])
+        
+        
+        #Test A
+        
+        
+        #integrate delta constraint
+        
+        
+        sci.integra
+        
+        
+        
+
+        phi.append(temp_phi)
+        pi.append(temp_pi)
+        A.append(temp_A)
+        
+
+    return phi
+
+#*******************************************************************************   
+        
 def Reflecting_Wave_Test():
      
      
     C = GenerateChebyshevCollocationPoints(20)
     C.sort()
-     
+    
  
     u = []
     for i in C:
-        u.append(m.exp(-20.0*i**2))
+        #u.append(m.exp(-20.0*i**2))
+        u.append(m.exp(-i**2))
     u = np.array(u)
         
         
     phi = []
     for i in C:
-        phi.append(-40.0*m.exp(-20.0*i**2))
+        #phi.append(-40.0*m.exp(-20.0*i**2))
+        phi.append(2.0*m.exp(-i**2))
     phi = np.array(phi)
 
         
     pi = []
     for i in range(len(C)):
-        pi.append(5)
+        pi.append(10.0)
     pi = np.array(pi)
         
-    SSP = PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 50)
+    SSP = PsuedoSpectralSolutionToReflectingWaveEquation(u, phi, pi, 5000)
     
     for k in SSP:
         plt.plot(C,k)
